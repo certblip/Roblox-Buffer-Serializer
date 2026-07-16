@@ -1,6 +1,6 @@
 # Luau Binary Serializer
 
-Luau Binary Serializer compresses your Roblox data tables into compact, lightweight binary streams. Built entirely on Roblox's native `buffer` API, this module provides a fast, bandwidth-friendly alternative to standard JSON formatting. 
+Luau Binary Serializer compresses your Roblox data tables into compact, lightweight binary streams. Built entirely on Roblox's native `buffer` API, this module provides a fast, bandwidth-friendly alternative to standard JSON formatting.
 
 You can use this tool to optimize network payloads sent over `RemoteEvents` or to reduce character usage when saving data to `DataStores`.
 
@@ -15,11 +15,13 @@ You can use this tool to optimize network payloads sent over `RemoteEvents` or t
 ## Installation
 
 ### Manual Installation
+
 1. Copy the source code from `src/BinarySerializer.luau`.
 2. Create a `ModuleScript` inside `ReplicatedStorage` and name it `BinarySerializer`.
 3. Paste the code directly into that script.
 
 ### Rojo Setup
+
 Place the `src` folder inside your project directory and map it in your `default.project.json` file:
 
 ```json
@@ -35,6 +37,12 @@ Place the `src` folder inside your project directory and map it in your `default
 This document provides a detailed technical overview of the functions available in the `BinarySerializer` module.
 
 ## Core Functions
+
+### `Serializer.serialize`
+
+```luau
+function Serializer.serialize(value: any, initialCapacity: number?): buffer
+```
 
 Serializes any supported Luau data type into a binary buffer.
 
@@ -52,6 +60,8 @@ Serializes any supported Luau data type into a binary buffer.
 
 ```luau
 function Serializer.deserialize(buf: buffer): any
+```
+
 * **Arguments:**
   * `buf`: The binary Luau buffer containing the serialized data.
 * **Returns:**
@@ -69,6 +79,13 @@ Use these utility functions to prepare your binary payloads for storage engines 
 
 ```luau
 function Serializer.toBase64(buf: buffer): string
+```
+
+### `Serializer.fromBase64`
+
+```luau
+function Serializer.fromBase64(s: string): buffer
+```
 
 * **Arguments:**
   * `s`: The Base64 string to decode.
@@ -83,6 +100,7 @@ function Serializer.toBase64(buf: buffer): string
 
 ```luau
 function Serializer.selfTest(): boolean
+```
 
 Runs a diagnostic suite on the module using a predefined dataset containing mixed types (numbers, nested tables, Vector3, and CFrames).
 
@@ -90,4 +108,3 @@ Runs a diagnostic suite on the module using a predefined dataset containing mixe
   * `true` if all serialization, deserialization, and Base64 tests pass successfully.
 * **Behavior:**
   * Prints diagnostic information to the output console, including final byte sizes compared with an equivalent JSON representation. Raises an assertion error if any validation step fails.
-
