@@ -28,3 +28,66 @@ Place the `src` folder inside your project directory and map it in your `default
     "$path": "src/BinarySerializer.luau"
   }
 }
+```
+
+# API Reference
+
+This document provides a detailed technical overview of the functions available in the `BinarySerializer` module.
+
+## Core Functions
+
+Serializes any supported Luau data type into a binary buffer.
+
+* **Arguments:**
+  * `value`: The data to serialize. Supported types include `nil`, `boolean`, `number`, `string`, `table`, `Vector3`, and `CFrame`.
+  * `initialCapacity` *(Optional)*: An integer specifying the initial size of the buffer in bytes. Providing a size close to your final payload size improves performance by preventing dynamic buffer reallocations. Defaults to `128` bytes.
+* **Returns:**
+  * `buffer`: A read-only Luau buffer containing your serialized binary data.
+* **Raises:**
+  * Raises an error if the value contains unsupported types (e.g., Instances, functions) or exceeds the maximum nested table depth of `32`.
+
+---
+
+### `Serializer.deserialize`
+
+```luau
+function Serializer.deserialize(buf: buffer): any
+* **Arguments:**
+  * `buf`: The binary Luau buffer containing the serialized data.
+* **Returns:**
+  * `any`: The restored data payload (e.g., table, string, Vector3).
+* **Raises:**
+  * Raises an error if the buffer contains corrupted data or unrecognized type tags.
+
+---
+
+## Base64 Utilities
+
+Use these utility functions to prepare your binary payloads for storage engines like Roblox `DataStoreService` that accept only string formats.
+
+### `Serializer.toBase64`
+
+```luau
+function Serializer.toBase64(buf: buffer): string
+
+* **Arguments:**
+  * `s`: The Base64 string to decode.
+* **Returns:**
+  * `buffer`: The reconstructed binary buffer, ready for `Serializer.deserialize`.
+
+---
+
+## Diagnostics
+
+### `Serializer.selfTest`
+
+```luau
+function Serializer.selfTest(): boolean
+
+Runs a diagnostic suite on the module using a predefined dataset containing mixed types (numbers, nested tables, Vector3, and CFrames).
+
+* **Returns:**
+  * `true` if all serialization, deserialization, and Base64 tests pass successfully.
+* **Behavior:**
+  * Prints diagnostic information to the output console, including final byte sizes compared with an equivalent JSON representation. Raises an assertion error if any validation step fails.
+
